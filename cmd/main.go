@@ -3,6 +3,7 @@ package main
 import (
 	"ApiGo/controller"
 	"ApiGo/db"
+	"ApiGo/repository"
 	"ApiGo/usecase"
 	"github.com/gin-gonic/gin"
 )
@@ -15,8 +16,11 @@ func main() {
 		panic(err)
 	}
 
-	ProductUsecase := usecase.NewProductUsecase()
-
+	//camada de repository
+	ProductRepository := repository.NewProductRepository(dbConnection)
+	//camada usecase
+	ProductUsecase := usecase.NewProductUsecase(ProductRepository)
+	//camada de controllers
 	ProductController := controller.NewProductController(ProductUsecase)
 
 	server.GET("/ping", func(c *gin.Context) {
